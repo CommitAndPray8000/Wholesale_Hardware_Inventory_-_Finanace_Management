@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Wholesale Hardware | Central Inventory & Operations</title>
+  <meta name="description" content="Wholesale hardware supply inventory, price management, contractor catalog, stock alerts, and business intelligence portal.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div id="app-container">
+    
+    <!-- =======================================================================
+         LEFT SIDEBAR (MATCHING USER SCREENSHOT)
+         ======================================================================= -->
+    <aside class="sidebar" id="main-sidebar">
+      <!-- User Profile Badge at top -->
+      <div class="user-profile-badge">
+        <div class="user-avatar-circle" title="username">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+        </div>
+        <div class="user-info">
+          <span class="user-name">username</span>
+          <span class="user-email" title="username@gmail.com">username@gmail.com</span>
+        </div>
+      </div>
+
+      <!-- Navigation Items -->
+      <nav class="sidebar-nav">
+        <!-- Dashboard (Active) -->
+        <button class="nav-item active" data-view="dashboard" id="nav-dashboard">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+          </svg>
+          <span>Dashboard</span>
+        </button>
+
+        <!-- Stock -->
+        <button class="nav-item" data-view="stock" id="nav-stock">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 2H4c-1 0-2 .9-2 2v3.01c0 .72.43 1.34 1 1.69V20c0 1.1 1.1 2 2 2h14c.9 0 2-.9 2-2V8.7c.57-.35 1-.97 1-1.69V4c0-1.1-1-2-2-2zm-5 12H9v-2h6v2zm5-7H4V4h16v3z"/>
+          </svg>
+          <span>Stock</span>
+          <span class="nav-badge" id="nav-badge-stock">3</span>
+        </button>
+
+        <!-- Prices -->
+        <button class="nav-item" data-view="prices" id="nav-prices">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+          </svg>
+          <span>Prices</span>
+        </button>
+
+        <!-- Ledger with Floating Mini-Screen Pop-up -->
+        <div class="ledger-hover-group" id="ledger-hover-group">
+          <button class="nav-item" data-view="ledger" id="nav-ledger">
+            <svg viewBox="0 0 24 24">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
+            <span>Ledger</span>
+            <svg class="flyout-arrow" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+
+          <!-- Floating Mini Screen Pop-up beside Ledger -->
+          <div class="ledger-mini-screen" id="ledger-mini-screen">
+            <div class="mini-screen-header">SELECT LEDGER TYPE</div>
+            
+            <button class="mini-option-btn option-credit" id="mini-opt-credit" onclick="openLedgerWithMode('credit')">
+              <div class="mini-icon-circle credit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              </div>
+              <div class="mini-text">
+                <span class="mini-title">Credit</span>
+                <span class="mini-desc">Contractor Receivables</span>
+              </div>
+              <span class="mini-badge credit-badge" id="mini-credit-count">4</span>
+            </button>
+
+            <button class="mini-option-btn option-debt" id="mini-opt-debt" onclick="openLedgerWithMode('debt')">
+              <div class="mini-icon-circle debt">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="17 14 12 9 7 14"></polyline><line x1="12" y1="9" x2="12" y2="21"></line></svg>
+              </div>
+              <div class="mini-text">
+                <span class="mini-title">Debt</span>
+                <span class="mini-desc">Supplier Payables</span>
+              </div>
+              <span class="mini-badge debt-badge" id="mini-debt-count">4</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Reports -->
+        <button class="nav-item" data-view="reports" id="nav-reports">
+          <svg viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+          </svg>
+          <span>Reports</span>
+        </button>
+
+        <!-- Settings -->
+        <button class="nav-item" data-view="settings" id="nav-settings">
+          <svg viewBox="0 0 24 24">
+            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.45.17-.48.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+          </svg>
+          <span>Settings</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer (Logout) -->
+      <div class="sidebar-footer">
+        <button class="logout-btn" id="logout-btn">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- =======================================================================
+         MAIN APPLICATION AREA & TOPBAR
+         ======================================================================= -->
+    <div class="main-wrapper">
+      
+      <!-- Topbar Header (Matching User Screenshot) -->
+      <header class="topbar">
+        <!-- Search inventory, prices, reports... -->
+        <div class="search-container">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            class="search-input" 
+            id="global-search" 
+            placeholder="Search inventory, prices, reports..."
+            autocomplete="off"
+          >
+          <span class="search-shortcut">Ctrl+K</span>
+        </div>
+
+        <!-- Right Side Action Icons -->
+        <div class="topbar-actions">
+          <!-- Notification Bell -->
+          <button class="action-icon-btn" id="notif-btn" title="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notification-dot"></span>
+          </button>
+
+          <!-- Help / Question Mark Circle -->
+          <button class="action-icon-btn" id="help-btn" title="Help & Documentation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </button>
+
+          <!-- Divider -->
+          <div class="topbar-divider"></div>
+
+          <!-- User Profile Avatar Button -->
+          <button class="topbar-avatar-btn" id="avatar-btn" title="username (Super Admin)">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dropdown: Notifications -->
+      <div class="dropdown-menu" id="notif-menu">
+        <div class="dropdown-header">
+          <span class="dropdown-title">System Alerts & Activity</span>
+          <span style="font-size: 11.5px; color: var(--primary); font-weight: 600; cursor: pointer;">Mark all read</span>
+        </div>
+        <div class="dropdown-list">
+          <div class="dropdown-item">
+            <div class="notif-icon-box" style="background: #fee2e2; color: #ef4444;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </div>
+            <div class="notif-text">
+              <div class="notif-title">Low Stock Alert: DeWalt 20V Hammer Drill</div>
+              <div class="notif-time">Only 4 units left in Bay A-04 • 12 mins ago</div>
+            </div>
+          </div>
+          <div class="dropdown-item">
+            <div class="notif-icon-box" style="background: #e0e7ff; color: #4f46e5;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 14V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-2 0H3V6h14v8zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </div>
+            <div class="notif-text">
+              <div class="notif-title">Contractor Order #PO-9482 Received</div>
+              <div class="notif-time">Apex Construction Corp ($4,850.00) • 1 hour ago</div>
+            </div>
+          </div>
+          <div class="dropdown-item">
+            <div class="notif-icon-box" style="background: #ecfdf5; color: #10b981;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+            </div>
+            <div class="notif-text">
+              <div class="notif-title">Wholesale Price Matrix Updated</div>
+              <div class="notif-time">Quarterly 4.5% margin adjustment applied • 3 hours ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dropdown: User Profile -->
+      <div class="dropdown-menu" id="avatar-menu" style="width: 240px;">
+        <div style="padding: 14px 16px; border-bottom: 1px solid #f1f5f9;">
+          <div style="font-weight: 600; font-size: 14px;">username</div>
+          <div style="font-size: 12px; color: #64748b;">username@gmail.com</div>
+        </div>
+        <div style="padding: 6px 0;">
+          <div class="dropdown-item" onclick="document.querySelector('[data-view=\'settings\']').click();">
+            <span style="font-size: 13.5px;">Account Settings</span>
+          </div>
+          <div class="dropdown-item" onclick="openModal('modal-help');">
+            <span style="font-size: 13.5px;">Warehouse Documentation</span>
+          </div>
+          <div class="dropdown-item" style="color: #ef4444;" onclick="openModal('modal-logout');">
+            <span style="font-size: 13.5px; font-weight: 600;">Sign Out</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           DYNAMIC CONTENT VIEWPORT
+           ===================================================================== -->
+      <main class="content-viewport">
+
+        <!-- 1. DASHBOARD VIEW (DEFAULT ACTIVE) -->
+        <section class="view-section active" id="view-dashboard">
+          <div class="page-header">
+            <div class="page-title-box">
+              <h1>Wholesale Hardware Command Center</h1>
+              <p>Real-time inventory levels, wholesale order throughput, and replenishment triggers.</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-secondary" onclick="exportCSV()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Export CSV
+              </button>
+              <button class="btn btn-primary" onclick="openAddItemModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                + Add Item
+              </button>
+            </div>
+          </div>
+
+          <!-- Stats KPI Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Total Inventory Valuation</span>
+                <div class="stat-icon-wrap" style="background: #e0e7ff; color: #4f46e5;">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                </div>
+              </div>
+              <div class="stat-value" id="stat-total-valuation">$0.00</div>
+              <div class="stat-trend">
+                <span class="trend-badge trend-up">↑ 12.8%</span>
+                <span class="stat-meta">vs last month</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Hardware Catalog SKUs</span>
+                <div class="stat-icon-wrap" style="background: #ecfdf5; color: #10b981;">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+                </div>
+              </div>
+              <div class="stat-value" id="stat-total-skus">0 Products</div>
+              <div class="stat-trend">
+                <span class="trend-badge trend-up">94.2%</span>
+                <span class="stat-meta">in-stock availability</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Low Stock Alerts</span>
+                <div class="stat-icon-wrap" style="background: #fffbeb; color: #f59e0b;">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                </div>
+              </div>
+              <div class="stat-value" id="stat-low-stock" style="color: #d97706;">0 Items</div>
+              <div class="stat-trend">
+                <span class="trend-badge trend-down">Needs Reorder</span>
+                <span class="stat-meta">below threshold</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Wholesale Volume (30D)</span>
+                <div class="stat-icon-wrap" style="background: #eff6ff; color: #3b82f6;">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                </div>
+              </div>
+              <div class="stat-value">$124,850.00</div>
+              <div class="stat-trend">
+                <span class="trend-badge trend-up">↑ 8.4%</span>
+                <span class="stat-meta">64 active trade accounts</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Split Dashboard Area: Chart & Low Stock Radar -->
+          <div class="dashboard-grid">
+            <!-- Left: Dynamic Chart Visualizer -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h2 class="card-title">Inventory Turnover & Wholesale Revenue</h2>
+                  <p class="card-subtitle">Monthly sales volume and stock replenishment flow (2026)</p>
+                </div>
+                <span class="badge badge-info">Live Sync</span>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <!-- Custom SVG Chart -->
+                  <svg class="chart-svg" viewBox="0 0 600 220" preserveAspectRatio="none">
+                    <!-- Background Grid Lines -->
+                    <line x1="0" y1="40" x2="600" y2="40" stroke="#f1f5f9" stroke-width="1" />
+                    <line x1="0" y1="90" x2="600" y2="90" stroke="#f1f5f9" stroke-width="1" />
+                    <line x1="0" y1="140" x2="600" y2="140" stroke="#f1f5f9" stroke-width="1" />
+                    <line x1="0" y1="190" x2="600" y2="190" stroke="#e2e8f0" stroke-width="1" />
+                    
+                    <!-- Gradient definitions -->
+                    <defs>
+                      <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.25" />
+                        <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.0" />
+                      </linearGradient>
+                      <linearGradient id="stockGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#10b981" stop-opacity="0.2" />
+                        <stop offset="100%" stop-color="#10b981" stop-opacity="0.0" />
+                      </linearGradient>
+                    </defs>
+
+                    <!-- Revenue Area & Path -->
+                    <path d="M 0 160 Q 100 130 200 100 T 400 65 T 600 30 L 600 190 L 0 190 Z" fill="url(#revenueGrad)" />
+                    <path d="M 0 160 Q 100 130 200 100 T 400 65 T 600 30" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" />
+
+                    <!-- Replenishment Line -->
+                    <path d="M 0 140 Q 100 155 200 120 T 400 110 T 600 80" fill="none" stroke="#10b981" stroke-width="2.5" stroke-dasharray="4,4" />
+
+                    <!-- Data Points -->
+                    <circle cx="200" cy="100" r="5" fill="#4f46e5" stroke="#ffffff" stroke-width="2" />
+                    <circle cx="400" cy="65" r="5" fill="#4f46e5" stroke="#ffffff" stroke-width="2" />
+                    <circle cx="600" cy="30" r="5" fill="#4f46e5" stroke="#ffffff" stroke-width="2" />
+                  </svg>
+                </div>
+                <div class="chart-legend">
+                  <div class="legend-item">
+                    <span class="legend-dot" style="background-color: #4f46e5;"></span>
+                    <span>Wholesale Revenue ($)</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-dot" style="background-color: #10b981;"></span>
+                    <span>Inventory Inflow Qty</span>
+                  </div>
+                  <div style="margin-left: auto; font-size: 11.5px; color: #64748b;">
+                    Jan &bull; Feb &bull; Mar &bull; Apr &bull; May &bull; Jun &bull; Jul &bull; Aug &bull; Sep &bull; Oct
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Urgent Stock Reorder Radar -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h2 class="card-title">Urgent Reorder Radar</h2>
+                  <p class="card-subtitle">Items reaching or below minimum threshold</p>
+                </div>
+                <span class="badge badge-warning">Action Required</span>
+              </div>
+              <div class="card-body">
+                <div class="alert-item-list" id="dashboard-alert-list">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom: Fast-Moving Hardware Table -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Fast-Moving Hardware Products</h2>
+                <p class="card-subtitle">Real-time inventory levels and warehouse bay positions</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="document.querySelector('[data-view=\'stock\']').click()">
+                View All Stock →
+              </button>
+            </div>
+            <div class="table-container" style="border: none; border-radius: 0;">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Product & SKU</th>
+                    <th>Warehouse Bay</th>
+                    <th>Stock Meter</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-stock-tbody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. STOCK MANAGEMENT VIEW -->
+        <section class="view-section" id="view-stock">
+          <div class="page-header">
+            <div class="page-title-box">
+              <h1>Hardware Stock Catalog</h1>
+              <p>Manage physical inventory, monitor bay locations, and adjust threshold buffers.</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-secondary" onclick="exportCSV()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Export CSV
+              </button>
+              <button class="btn btn-primary" onclick="openAddItemModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                + Add Item
+              </button>
+            </div>
+          </div>
+
+          <!-- Table Toolbar & Filters -->
+          <div class="table-toolbar">
+            <div class="filter-group">
+              <select class="filter-select" onchange="filterCategory(this.value)">
+                <option value="All">All Categories</option>
+                <option value="Power Tools">Power Tools</option>
+                <option value="Fasteners">Fasteners & Screws</option>
+                <option value="Plumbing">Plumbing & Valves</option>
+                <option value="Electrical">Electrical & Cables</option>
+                <option value="Safety & PPE">Safety & PPE</option>
+              </select>
+
+              <select class="filter-select" onchange="filterStockStatus(this.value)">
+                <option value="All">All Stock Levels</option>
+                <option value="In Stock">In Stock Only</option>
+                <option value="Low Stock">Low Stock (< Threshold)</option>
+                <option value="Out of Stock">Out of Stock</option>
+              </select>
+
+              <span style="font-size: 13px; color: #64748b;" id="stock-total-counter">Showing 0 items</span>
+            </div>
+          </div>
+
+          <!-- Full Stock Table -->
+          <div class="table-container">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th style="width: 40px;"><input type="checkbox"></th>
+                  <th>SKU</th>
+                  <th>Product Name & Supplier</th>
+                  <th>Category</th>
+                  <th>Warehouse Bay</th>
+                  <th>Stock / Min</th>
+                  <th>Status</th>
+                  <th>Wholesale Cost</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="stock-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 3. PRICES VIEW -->
+        <section class="view-section" id="view-prices">
+          <div class="page-header">
+            <div class="page-title-box">
+              <h1>Wholesale & Tiered Pricing Sheet</h1>
+              <p>Configure contractor trade discounts, bulk purchasing tiers, and retail margins.</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-primary" onclick="openModal('modal-bulk-price')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                Bulk Price Adjustment
+              </button>
+            </div>
+          </div>
+
+          <!-- Price Matrix Table -->
+          <div class="table-container">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>SKU</th>
+                  <th>Product & Category</th>
+                  <th>Base Cost ($)</th>
+                  <th>Contractor Tier 1 ($)</th>
+                  <th>Bulk Tier 2 (50+) ($)</th>
+                  <th>MSRP ($)</th>
+                  <th>Gross Margin %</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="prices-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 4. LEDGER VIEW (CREDIT & DEBT) -->
+        <section class="view-section" id="view-ledger">
+          <div class="page-header">
+            <div class="page-title-box ledger-header-box">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <h1 id="ledger-main-heading">Credit</h1>
+                <span class="badge badge-credit" id="ledger-heading-badge">Receivables</span>
+              </div>
+              <p id="ledger-main-subtitle">Contractor credit lines, trade accounts, and payment collection schedules.</p>
+              
+              <div class="ledger-mode-switcher">
+                <button class="mode-pill active pill-credit" id="mode-btn-credit" onclick="switchLedgerMode('credit')">
+                  ● Credit
+                </button>
+                <button class="mode-pill" id="mode-btn-debt" onclick="switchLedgerMode('debt')">
+                  ● Debt
+                </button>
+              </div>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-secondary" onclick="exportLedgerCSV()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Export CSV
+              </button>
+              <button class="btn btn-primary" id="btn-ledger-add" onclick="openAddLedgerModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                + Record Entry
+              </button>
+            </div>
+          </div>
+
+          <!-- Ledger KPI Summary Cards -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Total Credit (Receivables)</span>
+                <div class="stat-icon-wrap" style="background: #ecfdf5; color: #059669;">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                </div>
+              </div>
+              <div class="stat-value credit-amount" id="stat-total-credit">$0.00</div>
+              <div class="stat-trend">
+                <span class="trend-badge trend-up">Contractor Accounts</span>
+                <span class="stat-meta" id="stat-credit-count">0 trade accounts</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Total Debt (Payables)</span>
+                <div class="stat-icon-wrap" style="background: #fef2f2; color: #dc2626;">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 14V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-2 0H3V6h14v8zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                </div>
+              </div>
+              <div class="stat-value debt-amount" id="stat-total-debt">$0.00</div>
+              <div class="stat-trend">
+                <span class="trend-badge trend-down">Supplier Liabilities</span>
+                <span class="stat-meta" id="stat-debt-count">0 supplier invoices</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Net Working Capital</span>
+                <div class="stat-icon-wrap" style="background: #e0e7ff; color: #4f46e5;">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+                </div>
+              </div>
+              <div class="stat-value" id="stat-net-balance" style="color: #4f46e5;">$0.00</div>
+              <div class="stat-trend">
+                <span class="trend-badge trend-neutral" id="stat-net-status">Surplus Liquidity</span>
+                <span class="stat-meta">Receivables - Payables</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Overdue Accounts</span>
+                <div class="stat-icon-wrap" style="background: #fffbeb; color: #d97706;">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                </div>
+              </div>
+              <div class="stat-value" id="stat-overdue-count" style="color: #d97706;">0 Accounts</div>
+              <div class="stat-trend">
+                <span class="trend-badge trend-down">Attention</span>
+                <span class="stat-meta">past payment grace</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ledger Tabs: All, Credit, Debt -->
+          <div class="ledger-tabs">
+            <button class="ledger-tab-btn active" data-tab="all" id="ledger-tab-all" onclick="filterLedgerTab('all')">
+              <span>All Ledger Records</span>
+              <span class="tab-count" id="ledger-count-all">0</span>
+            </button>
+            <button class="ledger-tab-btn" data-tab="credit" id="ledger-tab-credit" onclick="filterLedgerTab('credit')">
+              <span style="color: #059669;">●</span>
+              <span>Credit (Contractor Receivables)</span>
+              <span class="tab-count" id="ledger-count-credit">0</span>
+            </button>
+            <button class="ledger-tab-btn" data-tab="debt" id="ledger-tab-debt" onclick="filterLedgerTab('debt')">
+              <span style="color: #dc2626;">●</span>
+              <span>Debt (Supplier Payables)</span>
+              <span class="tab-count" id="ledger-count-debt">0</span>
+            </button>
+          </div>
+
+          <!-- Ledger Table Toolbar -->
+          <div class="table-toolbar">
+            <div class="filter-group">
+              <select class="filter-select" id="ledger-status-filter" onchange="filterLedgerStatus(this.value)">
+                <option value="All">All Settlement Statuses</option>
+                <option value="Outstanding">Outstanding (Unpaid)</option>
+                <option value="Partial">Partially Paid</option>
+                <option value="Settled">Fully Settled</option>
+                <option value="Overdue">Overdue Grace Date</option>
+              </select>
+
+              <span style="font-size: 13px; color: #64748b;" id="ledger-total-counter">Showing 0 ledger entries</span>
+            </div>
+          </div>
+
+          <!-- Ledger Data Table -->
+          <div class="table-container">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Ref #</th>
+                  <th>Type</th>
+                  <th>Account / Party</th>
+                  <th>Notes & Description</th>
+                  <th>Total Amount</th>
+                  <th>Settled</th>
+                  <th>Remaining Balance</th>
+                  <th>Due Date & Terms</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ledger-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 5. REPORTS VIEW -->
+        <section class="view-section" id="view-reports">
+          <div class="page-header">
+            <div class="page-title-box">
+              <h1>Warehouse Analytics & Financial Reports</h1>
+              <p>Inventory valuation, profit margin realization, and audit readiness reports.</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-primary" onclick="exportCSV()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Download Full Audit Report
+              </button>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Total Holding Cost</div>
+              <div class="stat-value" id="report-total-holding">$0.00</div>
+              <div class="stat-meta">Active warehouse physical assets</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Projected Wholesale Realization</div>
+              <div class="stat-value" id="report-potential-profit">$0.00</div>
+              <div class="stat-meta">Estimated contractor trade gross margin</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Average Inventory Turnover</div>
+              <div class="stat-value">5.8x / Year</div>
+              <div class="stat-meta">Hardware industry standard: 4.2x</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Stock Shrinkage & Variance</div>
+              <div class="stat-value" style="color: #10b981;">0.12%</div>
+              <div class="stat-meta">Significantly below 1.0% limit</div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 24px;">
+            <div class="card-header">
+              <h2 class="card-title">Category Revenue Breakdown</h2>
+            </div>
+            <div class="card-body">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                <div style="padding: 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                  <div style="font-size: 13px; color: #64748b;">Power Tools</div>
+                  <div style="font-size: 20px; font-weight: 700; color: #4f46e5; margin: 4px 0;">38.4%</div>
+                  <div style="font-size: 12px; color: #10b981;">↑ Leading margin producer</div>
+                </div>
+                <div style="padding: 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                  <div style="font-size: 13px; color: #64748b;">Electrical & Wiring</div>
+                  <div style="font-size: 20px; font-weight: 700; color: #3b82f6; margin: 4px 0;">26.1%</div>
+                  <div style="font-size: 12px; color: #64748b;">High volume turnover</div>
+                </div>
+                <div style="padding: 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                  <div style="font-size: 13px; color: #64748b;">Plumbing & Valves</div>
+                  <div style="font-size: 20px; font-weight: 700; color: #06b6d4; margin: 4px 0;">18.5%</div>
+                  <div style="font-size: 12px; color: #64748b;">Stable contractor demand</div>
+                </div>
+                <div style="padding: 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                  <div style="font-size: 13px; color: #64748b;">Fasteners & Hardware</div>
+                  <div style="font-size: 20px; font-weight: 700; color: #f59e0b; margin: 4px 0;">17.0%</div>
+                  <div style="font-size: 12px; color: #10b981;">Highest repeat purchase rate</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. SETTINGS VIEW -->
+        <section class="view-section" id="view-settings">
+          <div class="page-header">
+            <div class="page-title-box">
+              <h1>System & Store Configuration</h1>
+              <p>Configure warehouse details, alert thresholds, team permissions, and database sync.</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-primary" onclick="showToast('Settings successfully updated!', 'success')">
+                Save Preferences
+              </button>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            <!-- General Settings -->
+            <div class="card">
+              <div class="card-header">
+                <h2 class="card-title">Warehouse & Company Details</h2>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label>Business Name</label>
+                  <input type="text" class="form-control" value="Apex Wholesale Hardware Supplies LLC">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Warehouse Branch Code</label>
+                    <input type="text" class="form-control" value="WH-NORTH-01">
+                  </div>
+                  <div class="form-group">
+                    <label>Currency Symbol</label>
+                    <input type="text" class="form-control" value="USD ($)">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Default Low Stock Alert Threshold</label>
+                  <input type="number" class="form-control" value="20">
+                </div>
+              </div>
+            </div>
+
+            <!-- Database & Environment -->
+            <div class="card">
+              <div class="card-header">
+                <h2 class="card-title">Database & Backend Status</h2>
+              </div>
+              <div class="card-body">
+                <div style="padding: 12px 16px; background: #ecfdf5; border-radius: 8px; border: 1px solid #a7f3d0; margin-bottom: 16px;">
+                  <div style="font-weight: 600; color: #065f46; font-size: 13.5px;">✓ SQLite Database Linked</div>
+                  <div style="font-size: 12px; color: #047857; margin-top: 2px;">File: Database_project/db.sqlite3 &bull; Django 6.1.2 Engine</div>
+                </div>
+                <div class="form-group">
+                  <label>Administrator Role</label>
+                  <input type="text" class="form-control" value="username (Super Admin)" disabled>
+                </div>
+                <div class="form-group">
+                  <label>Alert Email Channel</label>
+                  <input type="email" class="form-control" value="username@gmail.com">
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: ADD / EDIT ITEM
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-add-item">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-item-title">Add New Hardware Item</h3>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+      <form id="form-add-item">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Product Name *</label>
+            <input type="text" id="item-name" class="form-control" placeholder="e.g. DeWalt 20V Cordless Hammer Drill" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>SKU Code *</label>
+              <input type="text" id="item-sku" class="form-control" placeholder="e.g. HW-DRL-552" required>
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="item-category" class="form-control">
+                <option value="Power Tools">Power Tools</option>
+                <option value="Fasteners">Fasteners & Screws</option>
+                <option value="Plumbing">Plumbing & Valves</option>
+                <option value="Electrical">Electrical & Cables</option>
+                <option value="Safety & PPE">Safety & PPE</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Initial Stock Qty</label>
+              <input type="number" id="item-stock" class="form-control" value="25" min="0">
+            </div>
+            <div class="form-group">
+              <label>Min Reorder Threshold</label>
+              <input type="number" id="item-min" class="form-control" value="15" min="1">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Wholesale Cost ($)</label>
+              <input type="number" id="item-cost" class="form-control" step="0.01" value="45.00">
+            </div>
+            <div class="form-group">
+              <label>Contractor Price ($)</label>
+              <input type="number" id="item-contractor-price" class="form-control" step="0.01" value="65.00">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Warehouse Bay Location</label>
+              <input type="text" id="item-location" class="form-control" value="Bay A-05">
+            </div>
+            <div class="form-group">
+              <label>Supplier</label>
+              <input type="text" id="item-supplier" class="form-control" value="Apex Wholesale Distribution">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-trigger">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Hardware Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: ADJUST STOCK
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-adjust-stock">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Adjust Stock Level</h3>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+      <form id="form-adjust-stock">
+        <input type="hidden" id="adjust-item-id">
+        <div class="modal-body">
+          <div style="margin-bottom: 14px;">
+            <div style="font-size: 14px; font-weight: 600;" id="adjust-item-name">Product Name</div>
+            <div style="font-size: 12.5px; color: #64748b; margin-top: 2px;">
+              Current inventory on hand: <strong id="adjust-current-stock" style="color: #4f46e5;">0 units</strong>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Adjustment Type</label>
+            <select id="adjust-type" class="form-control">
+              <option value="add">Add Inflow (+ Restock / Purchase Order)</option>
+              <option value="remove">Remove Outflow (- Sale / Damaged / Return)</option>
+              <option value="set">Manual Inventory Count (Set Exact Count)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Quantity Units</label>
+            <input type="number" id="adjust-qty" class="form-control" placeholder="e.g. 50" min="1" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-trigger">Cancel</button>
+          <button type="submit" class="btn btn-primary">Apply Stock Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: BULK PRICE ADJUSTMENT
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-bulk-price">
+    <div class="modal-dialog" style="max-width: 460px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Bulk Price Adjustment</h3>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+      <form id="form-bulk-price">
+        <div class="modal-body">
+          <p style="font-size: 13px; color: #64748b; margin-bottom: 16px;">
+            Apply a percentage adjustment across an entire product category (contractor, bulk, and MSRP tiers).
+          </p>
+          <div class="form-group">
+            <label>Target Category</label>
+            <select id="bulk-category" class="form-control">
+              <option value="All">All Hardware Categories</option>
+              <option value="Power Tools">Power Tools</option>
+              <option value="Fasteners">Fasteners & Screws</option>
+              <option value="Plumbing">Plumbing & Valves</option>
+              <option value="Electrical">Electrical & Cables</option>
+              <option value="Safety & PPE">Safety & PPE</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Adjustment Percentage (%)</label>
+            <input type="number" id="bulk-percent" class="form-control" placeholder="e.g. 5 for +5%, -3 for -3%" step="0.1" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-trigger">Cancel</button>
+          <button type="submit" class="btn btn-primary">Apply Price Adjustment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: ADD LEDGER TRANSACTION (CREDIT / DEBT)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-add-ledger">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-ledger-title">Record Ledger Transaction</h3>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+      <form id="form-add-ledger">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Transaction Classification *</label>
+            <select id="ledger-type" class="form-control" required>
+              <option value="Credit">Credit (Contractor / Customer Receivable)</option>
+              <option value="Debt">Debt (Supplier / Vendor Payable)</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Account / Party Name *</label>
+              <input type="text" id="ledger-party" class="form-control" placeholder="e.g. Apex Construction Corp" required>
+            </div>
+            <div class="form-group">
+              <label>Invoice / Reference # *</label>
+              <input type="text" id="ledger-ref" class="form-control" placeholder="e.g. INV-CR-409" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Total Incurred Amount ($) *</label>
+              <input type="number" id="ledger-amount" class="form-control" step="0.01" placeholder="e.g. 5200.00" required>
+            </div>
+            <div class="form-group">
+              <label>Initial Settled / Paid ($)</label>
+              <input type="number" id="ledger-paid" class="form-control" step="0.01" value="0.00">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Due Date *</label>
+              <input type="date" id="ledger-due-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Payment Terms</label>
+              <select id="ledger-terms" class="form-control">
+                <option value="Net 30">Net 30 Days</option>
+                <option value="Net 15">Net 15 Days</option>
+                <option value="Net 60">Net 60 Days</option>
+                <option value="Due on Receipt">Due on Receipt</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Goods / Hardware Description</label>
+            <input type="text" id="ledger-notes" class="form-control" placeholder="e.g. Commercial fasteners and drill bits order">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-trigger">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save to Ledger</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: SETTLE / RECORD PAYMENT FOR LEDGER ENTRY
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-settle-ledger">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="settle-modal-title">Record Ledger Payment</h3>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+      <form id="form-settle-ledger">
+        <input type="hidden" id="settle-entry-id">
+        <div class="modal-body">
+          <div style="margin-bottom: 14px;">
+            <div style="font-size: 14px; font-weight: 600;" id="settle-party-name">Party Name</div>
+            <div style="font-size: 12.5px; color: #64748b; margin-top: 2px;">
+              Current outstanding balance: <strong id="settle-current-balance" style="color: #4f46e5;">$0.00</strong>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Payment / Remittance Amount ($) *</label>
+            <input type="number" id="settle-amount" class="form-control" step="0.01" placeholder="e.g. 1500.00" required>
+          </div>
+          <div class="form-group">
+            <label>Payment Method</label>
+            <select id="settle-method" class="form-control">
+              <option value="Bank Wire / ACH">Bank Wire / ACH</option>
+              <option value="Company Cheque">Company Cheque</option>
+              <option value="Credit / Debit Card">Credit / Debit Card</option>
+              <option value="Cash Deposit">Cash Deposit</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-trigger">Cancel</button>
+          <button type="submit" class="btn btn-primary">Confirm Payment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: HELP & SHORTCUTS
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-help">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">System Guidance & Shortcuts</h3>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h4 style="font-size: 14px; margin-bottom: 8px;">Keyboard Shortcuts</h4>
+        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px;">
+          <span>Focus Global Search Bar</span>
+          <kbd style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px;">Ctrl + K</kbd>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px;">
+          <span>Quick Add Item</span>
+          <kbd style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px;">+ Add Item</kbd>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px;">
+          <span>Close Active Modal</span>
+          <kbd style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px;">Esc</kbd>
+        </div>
+        <h4 style="font-size: 14px; margin: 16px 0 8px 0;">Warehouse Support</h4>
+        <p style="font-size: 13px; color: #64748b; line-height: 1.5;">
+          For support with warehouse RFID scanners or barcode synchronizers, contact IT Operations at <strong style="color: #4f46e5;">ops@company.internal</strong>.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary modal-close-trigger">Got It</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: LOGOUT CONFIRMATION
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-logout">
+    <div class="modal-dialog" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Confirm Sign Out</h3>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13.5px; color: #475569; line-height: 1.5;">
+          Are you sure you want to log out of <strong>username</strong>'s session? Any unsaved local edits will be preserved.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary modal-close-trigger">Cancel</button>
+        <button type="button" class="btn btn-danger" onclick="closeAllModals(); showToast('Signed out successfully', 'info');">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <script src="app.js"></script>
+  <script>
+    if (typeof inventoryData === 'undefined') {
+      var s = document.createElement('script');
+      s.src = '/static/app.js';
+      document.body.appendChild(s);
+    }
+  </script>
+</body>
+</html>
