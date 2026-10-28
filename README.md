@@ -1,4 +1,4 @@
-# DBMS Project
+# Wholesale Hardware Inventory and Finance Management
 
 This repository contains the DBMS project with frontend and backend components.
 
