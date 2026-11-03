@@ -1,0 +1,65 @@
+  <div class="modal-backdrop" id="modal-add-ledger">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-ledger-title">Record Ledger Transaction</h3>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+      <form id="form-add-ledger">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Transaction Classification *</label>
+            <select id="ledger-type" class="form-control" required>
+              <option value="Credit">Credit (Contractor / Customer Receivable)</option>
+              <option value="Debt">Debt (Supplier / Vendor Payable)</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Account / Party Name *</label>
+              <input type="text" id="ledger-party" class="form-control" placeholder="e.g. Apex Construction Corp" required>
+            </div>
+            <div class="form-group">
+              <label>Invoice / Reference # *</label>
+              <input type="text" id="ledger-ref" class="form-control" placeholder="e.g. INV-CR-409" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Total Incurred Amount ($) *</label>
+              <input type="number" id="ledger-amount" class="form-control" step="0.01" placeholder="e.g. 5200.00" required>
+            </div>
+            <div class="form-group">
+              <label>Initial Settled / Paid ($)</label>
+              <input type="number" id="ledger-paid" class="form-control" step="0.01" value="0.00">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Due Date *</label>
+              <input type="date" id="ledger-due-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Payment Terms</label>
+              <select id="ledger-terms" class="form-control">
+                <option value="Net 30">Net 30 Days</option>
+                <option value="Net 15">Net 15 Days</option>
+                <option value="Net 60">Net 60 Days</option>
+                <option value="Due on Receipt">Due on Receipt</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Goods / Hardware Description</label>
+            <input type="text" id="ledger-notes" class="form-control" placeholder="e.g. Commercial fasteners and drill bits order">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-trigger">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save to Ledger</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: SETTLE / RECORD PAYMENT FOR LEDGER ENTRY

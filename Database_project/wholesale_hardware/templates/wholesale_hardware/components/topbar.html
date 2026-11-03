@@ -1,0 +1,111 @@
+    <!-- =======================================================================
+         MAIN APPLICATION AREA & TOPBAR
+         ======================================================================= -->
+    <div class="main-wrapper">
+      
+      <!-- Topbar Header (Matching User Screenshot) -->
+      <header class="topbar">
+        <!-- Search inventory, prices, reports... -->
+        <div class="search-container">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            class="search-input" 
+            id="global-search" 
+            placeholder="Search inventory, prices, reports..."
+            autocomplete="off"
+          >
+          <span class="search-shortcut">Ctrl+K</span>
+        </div>
+
+        <!-- Right Side Action Icons -->
+        <div class="topbar-actions">
+          <!-- Notification Bell -->
+          <button class="action-icon-btn" id="notif-btn" title="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notification-dot"></span>
+          </button>
+
+          <!-- Help / Question Mark Circle -->
+          <button class="action-icon-btn" id="help-btn" title="Help & Documentation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </button>
+
+          <!-- Divider -->
+          <div class="topbar-divider"></div>
+
+          <!-- User Profile Avatar Button -->
+          <button class="topbar-avatar-btn" id="avatar-btn" title="username (Super Admin)">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dropdown: Notifications -->
+      <div class="dropdown-menu" id="notif-menu">
+        <div class="dropdown-header">
+          <span class="dropdown-title">System Alerts & Activity</span>
+          <span style="font-size: 11.5px; color: var(--primary); font-weight: 600; cursor: pointer;">Mark all read</span>
+        </div>
+        <div class="dropdown-list">
+          <div class="dropdown-item">
+            <div class="notif-icon-box" style="background: #fee2e2; color: #ef4444;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </div>
+            <div class="notif-text">
+              <div class="notif-title">Low Stock Alert: DeWalt 20V Hammer Drill</div>
+              <div class="notif-time">Only 4 units left in Bay A-04 • 12 mins ago</div>
+            </div>
+          </div>
+          <div class="dropdown-item">
+            <div class="notif-icon-box" style="background: #e0e7ff; color: #4f46e5;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 14V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-2 0H3V6h14v8zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </div>
+            <div class="notif-text">
+              <div class="notif-title">Contractor Order #PO-9482 Received</div>
+              <div class="notif-time">Apex Construction Corp ($4,850.00) • 1 hour ago</div>
+            </div>
+          </div>
+          <div class="dropdown-item">
+            <div class="notif-icon-box" style="background: #ecfdf5; color: #10b981;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+            </div>
+            <div class="notif-text">
+              <div class="notif-title">Wholesale Price Matrix Updated</div>
+              <div class="notif-time">Quarterly 4.5% margin adjustment applied • 3 hours ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dropdown: User Profile -->
+      <div class="dropdown-menu" id="avatar-menu" style="width: 240px;">
+        <div style="padding: 14px 16px; border-bottom: 1px solid #f1f5f9;">
+          <div style="font-weight: 600; font-size: 14px;">username</div>
+          <div style="font-size: 12px; color: #64748b;">username@gmail.com</div>
+        </div>
+        <div style="padding: 6px 0;">
+          <div class="dropdown-item" onclick="document.querySelector('[data-view=\'settings\']').click();">
+            <span style="font-size: 13.5px;">Account Settings</span>
+          </div>
+          <div class="dropdown-item" onclick="openModal('modal-help');">
+            <span style="font-size: 13.5px;">Warehouse Documentation</span>
+          </div>
+          <div class="dropdown-item" style="color: #ef4444;" onclick="openModal('modal-logout');">
+            <span style="font-size: 13.5px; font-weight: 600;">Sign Out</span>
+          </div>
+        </div>
+      </div>
+

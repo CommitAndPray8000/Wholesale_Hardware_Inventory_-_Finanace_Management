@@ -1,0 +1,37 @@
+  <div class="modal-backdrop" id="modal-bulk-price">
+    <div class="modal-dialog" style="max-width: 460px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Bulk Price Adjustment</h3>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+      <form id="form-bulk-price">
+        <div class="modal-body">
+          <p style="font-size: 13px; color: #64748b; margin-bottom: 16px;">
+            Apply a percentage adjustment across an entire product category (contractor, bulk, and MSRP tiers).
+          </p>
+          <div class="form-group">
+            <label>Target Category</label>
+            <select id="bulk-category" class="form-control">
+              <option value="All">All Hardware Categories</option>
+              <option value="Power Tools">Power Tools</option>
+              <option value="Fasteners">Fasteners & Screws</option>
+              <option value="Plumbing">Plumbing & Valves</option>
+              <option value="Electrical">Electrical & Cables</option>
+              <option value="Safety & PPE">Safety & PPE</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Adjustment Percentage (%)</label>
+            <input type="number" id="bulk-percent" class="form-control" placeholder="e.g. 5 for +5%, -3 for -3%" step="0.1" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-trigger">Cancel</button>
+          <button type="submit" class="btn btn-primary">Apply Price Adjustment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: ADD LEDGER TRANSACTION (CREDIT / DEBT)

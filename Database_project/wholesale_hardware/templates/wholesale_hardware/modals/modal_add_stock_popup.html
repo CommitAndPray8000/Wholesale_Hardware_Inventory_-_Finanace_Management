@@ -1,0 +1,80 @@
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-add-stock-popup">
+    <div class="modal-dialog" style="border-radius: 18px; border: 2px solid #cbd5e1; max-width: 560px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);">
+      <div class="modal-header" style="padding: 20px 24px; border-bottom: 1px solid #f1f5f9;">
+        <div>
+          <h3 class="modal-title" style="font-size: 18px; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2563eb" stroke-width="2">
+              <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
+              <path d="m3.3 7 8.7 5 8.7-5"></path>
+              <path d="M12 22V12"></path>
+            </svg>
+            Add Stock
+          </h3>
+          <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Enter item details to register new stock to your active warehouse catalog</p>
+        </div>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+
+      <form id="form-add-stock-popup" method = "POST">
+             {% csrf_token %}
+        <div class="modal-body" style="padding: 22px 24px;">
+          <!-- Row 1: Item Name (Left) | SKU (Right) -->
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="popup-item-name" style="display: block; font-size: 12px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
+                Item Name <span style="color: #ef4444;">*</span>
+              </label>
+              <input type="text" id="popup-item-name" class="form-control" placeholder="e.g. Heavy Duty Steel Rack" required style="border-radius: 10px; border: 1px solid #cbd5e1; padding: 10px 14px; font-size: 13.5px; width: 100%;">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="popup-sku" style="display: block; font-size: 12px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
+                SKU <span style="color: #ef4444;">*</span>
+              </label>
+              <input type="text" id="popup-sku" class="form-control" placeholder="e.g. SKU-9941" required style="border-radius: 10px; border: 1px solid #cbd5e1; padding: 10px 14px; font-size: 13.5px; width: 100%;">
+            </div>
+          </div>
+
+          <!-- Row 2: Supplier (Left) | Price/Unit (Right) -->
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="popup-supplier" style="display: block; font-size: 12px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
+                Supplier <span style="color: #ef4444;">*</span>
+              </label>
+              <input type="text" id="popup-supplier" class="form-control" placeholder="e.g. Apex Logistics" required style="border-radius: 10px; border: 1px solid #cbd5e1; padding: 10px 14px; font-size: 13.5px; width: 100%;">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="popup-price" style="display: block; font-size: 12px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
+                Price/Unit <span style="color: #ef4444;">*</span>
+              </label>
+              <input type="text" id="popup-price" class="form-control" placeholder="$145.00" required style="border-radius: 10px; border: 1px solid #cbd5e1; padding: 10px 14px; font-size: 13.5px; width: 100%;">
+            </div>
+          </div>
+
+          <!-- Row 3: In Stock (Left) -->
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="popup-in-stock" style="display: block; font-size: 12px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
+                In Stock <span style="color: #ef4444;">*</span>
+              </label>
+              <input type="text" id="popup-in-stock" class="form-control" placeholder="e.g. 24 pcs or 100" required style="border-radius: 10px; border: 1px solid #cbd5e1; padding: 10px 14px; font-size: 13.5px; width: 100%;">
+            </div>
+            <div></div> <!-- Spacer for right column -->
+          </div>
+        </div>
+
+        <!-- Row 4: Cancel & Confirm (Blue-ish Buttons positioned as requested) -->
+        <div class="modal-footer" style="padding: 16px 24px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+          <button type="button" class="modal-close-trigger" style="padding: 10px 22px; border-radius: 10px; font-size: 13.5px; font-weight: 700; cursor: pointer; border: 1px solid #bfdbfe; background: #eff6ff; color: #1d4ed8; transition: all 0.2s;">
+            Cancel
+          </button>
+          <button type="submit" style="padding: 10px 26px; border-radius: 10px; font-size: 13.5px; font-weight: 700; cursor: pointer; border: 1px solid #2563eb; background: #2563eb; color: #ffffff; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.25); transition: all 0.2s;">
+            Confirm
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: STOCK ITEM STATS POP-UP (Floating box matching Add Stock design,

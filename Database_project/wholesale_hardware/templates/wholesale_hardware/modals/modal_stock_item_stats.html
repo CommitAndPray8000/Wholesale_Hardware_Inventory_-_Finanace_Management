@@ -1,0 +1,76 @@
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-stock-item-stats">
+    <div class="modal-dialog" style="border-radius: 18px; border: 2px solid #cbd5e1; max-width: 580px; width: 100%; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);">
+      <div class="modal-header" style="padding: 20px 24px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h3 class="modal-title" style="font-size: 18px; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2563eb" stroke-width="2">
+              <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
+              <path d="m3.3 7 8.7 5 8.7-5"></path>
+              <path d="M12 22V12"></path>
+            </svg>
+            <span id="stats-popup-header-title">Item Details & Statistics</span>
+          </h3>
+          <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Comprehensive inventory specifications, pricing & fulfillment status</p>
+        </div>
+        <button class="modal-close-btn modal-close-trigger" onclick="closeAllModals();">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 22px 24px;">
+        <!-- STATS VIEW: 9 required item statistics -->
+        <div id="stats-details-view">
+          <!-- Row 1: Item Name (Left) | Item Code (Right) -->
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">
+                Item Name
+              </label>
+              <div id="stats-display-name" style="border-radius: 10px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 10px 14px; font-size: 13.5px; font-weight: 700; color: #0f172a; min-height: 42px; display: flex; align-items: center;">-</div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">
+                Item Code
+              </label>
+              <div id="stats-display-code" style="border-radius: 10px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 10px 14px; font-size: 13.5px; font-weight: 600; color: #475569; font-family: monospace; min-height: 42px; display: flex; align-items: center;">-</div>
+            </div>
+          </div>
+
+          <!-- Row 2: Category (Left) | Stock Status (Right) -->
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">
+                Category
+              </label>
+              <div id="stats-display-category" style="border-radius: 10px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 10px 14px; font-size: 13.5px; font-weight: 600; color: #1e293b; min-height: 42px; display: flex; align-items: center;">-</div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">
+                Stock Status
+              </label>
+              <div id="stats-display-status" style="border-radius: 10px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 10px 14px; font-size: 13.5px; font-weight: 600; min-height: 42px; display: flex; align-items: center;">-</div>
+            </div>
+          </div>
+
+          <!-- Row 3: Current Quantity (Left) | Ordered Quantity (Right) -->
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">
+                Current Quantity
+              </label>
+              <div id="stats-display-current-qty" style="border-radius: 10px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 10px 14px; font-size: 13.5px; font-weight: 700; color: #0f172a; min-height: 42px; display: flex; align-items: center;">-</div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">
+                Ordered Quantity
+              </label>
+              <div id="stats-display-ordered-qty" style="border-radius: 10px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 10px 14px; font-size: 13.5px; font-weight: 700; color: #2563eb; min-height: 42px; display: flex; align-items: center;">-</div>
+            </div>
+          </div>
+
+          <!-- Row 4: Delivered Quantity (Left) | Purchase Price (Right) -->
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px;">
+                Delivered Quantity
+              </label>
+              <div id="stats-display-delivered-qty" style="border-radius: 10px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 10px 14px; font-size: 13.5px; font-weight: 600; color: #475569; min-height: 42px; display: flex; align-items: center;">-</div>

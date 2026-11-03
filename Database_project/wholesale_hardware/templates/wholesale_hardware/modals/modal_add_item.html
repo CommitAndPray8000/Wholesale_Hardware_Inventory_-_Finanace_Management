@@ -1,0 +1,74 @@
+  <!-- =========================================================================
+       MODAL: ADD / EDIT ITEM
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modal-add-item">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-item-title">Add New Hardware Item</h3>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+      <form id="form-add-item" method = "POST">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Product Name *</label>
+            <input type="text" id="item-name" class="form-control" placeholder="e.g. Name of Item" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>SKU Code *</label>
+              <input type="text" id="item-sku" class="form-control" placeholder="e.g. ITM-123" required>
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="item-category" class="form-control">
+                <option value="Hardware">Sand Paper</option>
+                <option value="Tapes">Tapes</option>
+                <option value="Tools">Tools</option>
+                <option value ="Spray Paints" >Spray Paints</option>
+                <option value="Sealents">Sealents</option>
+                <option value = "Hardware">Hardware</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Initial Stock Qty</label>
+              <input type="number" id="item-stock" class="form-control" value="25" min="0">
+            </div>
+            <div class="form-group">
+              <label>Min Reorder Threshold</label>
+              <input type="number" id="item-min" class="form-control" value="15" min="1">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Wholesale Cost ($)</label>
+              <input type="number" id="item-cost" class="form-control" step="0.01" value="45.00">
+            </div>
+            <div class="form-group">
+              <label>Contractor Price ($)</label>
+              <input type="number" id="item-contractor-price" class="form-control" step="0.01" value="65.00">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Warehouse Bay Location</label>
+              <input type="text" id="item-location" class="form-control" value="Bay A-05">
+            </div>
+            <div class="form-group">
+              <label>Supplier</label>
+              <input type="text" id="item-supplier" class="form-control" value="Apex Wholesale Distribution">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-trigger">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Hardware Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: ADJUST STOCK

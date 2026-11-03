@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cashier Operations Portal | Standard Traders</title>
+  <link rel="icon" type="image/png" href="/assets/STK_logo-removebg-preview.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --panel-dark: #141a29;
+      --card-bg: #1e2638;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      --text-white: #ffffff;
+      --text-muted: #94a3b8;
+      --text-light: #64748b;
+      --input-bg: #141a29;
+      --input-border: #334155;
+      
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.15);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.15);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.15);
+      --info: #3b82f6;
+      --info-bg: rgba(59, 130, 246, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.08) 0px, transparent 50%);
+      color: var(--text-white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Bar */
+    .topbar {
+      background: var(--panel-dark);
+      border-bottom: 1px solid var(--card-border);
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+    }
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-white);
+    }
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+    .brand-meta h1 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge-portal {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(79, 70, 229, 0.25);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      color: #a5b4fc;
+    }
+    .brand-meta p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 30px;
+      font-size: 13px;
+    }
+    .user-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .role-tag {
+      font-size: 11px;
+      color: #10b981;
+      font-weight: 600;
+    }
+    .btn-switch-owner {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fbbf24;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-switch-owner:hover {
+      background: rgba(245, 158, 11, 0.25);
+    }
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #fca5a5;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.22);
+      color: #ffffff;
+    }
+
+    /* Main Container */
+    .portal-main {
+      flex: 1;
+      max-width: 1320px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 28px 48px;
+    }
+
+    /* Info Banner */
+    .banner-restricted {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fde68a;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Main Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 14px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+    .nav-tab-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: var(--panel-dark);
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .nav-tab-btn:hover {
+      color: var(--text-white);
+      background: var(--card-bg);
+    }
+    .nav-tab-btn.active {
+      background: var(--primary-gradient);
+      color: var(--text-white);
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+    }
+
+    /* Time Slot Filter Pills (Today, Weekly, Monthly, Yearly, Inception) */
+    .slot-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .slot-bar-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .slot-pills {
+      display: flex;
+      gap: 6px;
+      background: var(--panel-dark);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+    }
+    .slot-pill {
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .slot-pill:hover {
+      color: var(--text-white);
+    }
+    .slot-pill.active {
+      background: #334155;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    }
+
+    /* KPI Summary Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--panel-dark);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .kpi-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+    .kpi-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-white);
+    }
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* Tab Sections */
+    .tab-section {
+      display: none;
+    }
+    .tab-section.active {
+      display: block;
+      animation: fadeIn 0.25s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Dual Tables Grid */
+    .history-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 1024px) {
+      .history-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Table Card */
+    .table-card {
+      background: var(--panel-dark);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .table-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .table-header h2 {
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .table-badge {
+      font-size: 11.5px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: #1e293b;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 480px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+    th {
+      padding: 12px 18px;
+      background: #101623;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    td {
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #e2e8f0;
+      vertical-align: middle;
+    }
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-paid { background: var(--success-bg); color: #34d399; }
+    .badge-unpaid { background: var(--danger-bg); color: #f87171; }
+    .badge-ordered { background: var(--info-bg); color: #60a5fa; }
+    .badge-received { background: var(--success-bg); color: #34d399; }
+    .empty-state {
+      padding: 40px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13.5px;
+    }
+
+    /* Forms in Card */
+    .form-panel {
+      background: var(--panel-dark);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 32px 36px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .form-panel-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .form-panel-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .rule-box {
+      background: rgba(79, 70, 229, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: #c7d2fe;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.45;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 640px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 6px;
+    }
+    .form-label span.req { color: var(--danger); }
+    .form-control, .form-select {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      color: var(--text-white);
+      font-size: 13.5px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .form-control:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
+    }
+    .form-help {
+      font-size: 11.5px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+    .btn-action-submit {
+      padding: 13px 28px;
+      background: var(--primary-gradient);
+      color: var(--text-white);
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-action-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(79, 70, 229, 0.55);
+    }
+    .form-response-alert {
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      margin-bottom: 20px;
+      display: none;
+      line-height: 1.45;
+    }
+    .form-response-alert.alert-success {
+      background: var(--success-bg);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #6ee7b7;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .form-response-alert.alert-danger {
+      background: var(--danger-bg);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Inventory Search Bar */
+    .inventory-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .search-input {
+      max-width: 360px;
+      width: 100%;
+      padding: 10px 16px;
+      background: var(--panel-dark);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      color: var(--text-white);
+      font-size: 13.5px;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <a href="/cashier/portal/" class="brand-section">
+      <img src="/assets/STK_logo-removebg-preview.png" alt="Standard Traders Logo" class="brand-logo">
+      <div class="brand-meta">
+        <h1>Standard Traders <span class="badge-portal">Cashier Portal</span></h1>
+        <p>Wholesale Hardware Point of Sale & Restocking</p>
+      </div>
+    </a>
+
+    <div class="user-actions">
+      <div class="user-pill">
+        <div class="user-avatar">{{ user.username|make_list|first|upper }}</div>
+        <div>
+          <span style="font-weight: 600;">{{ user.username }}</span>
+          <span class="role-tag">• {% if is_owner %}Owner Access{% else %}Cashier{% endif %}</span>
+        </div>
+      </div>
+
+      {% if is_owner %}
+      <a href="/dashboard/" class="btn-switch-owner" title="Switch to Full Operations Dashboard">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <span>Full Dashboard</span>
+      </a>
+      {% endif %}
+
+      <a href="/logout/" class="btn-logout" title="Sign out of Cashier session">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        <span>Sign Out</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Viewport -->
+  <main class="portal-main">
+    
+    {% if banner_info %}
+    <div class="banner-restricted">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      <span>{{ banner_info }}</span>
+    </div>
+    {% endif %}
+
+    <!-- Main Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab-btn active" data-tab="tab-operations" onclick="switchMainTab('tab-operations', this)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <span>Operations & Time Slot History</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="tab-order" onclick="switchMainTab('tab-order', this)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <span>Make Restock Order</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="tab-sale" onclick="switchMainTab('tab-sale', this)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+        <span>Record Customer Sale (POS)</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="tab-inventory" onclick="switchMainTab('tab-inventory', this)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        <span>Check Inventory</span>
+      </button>
+    </nav>
+
+    <!-- ======================================================== -->
+    <!-- TAB 1: OPERATIONS & TIME SLOT HISTORY -->
+    <!-- ======================================================== -->
+    <section id="tab-operations" class="tab-section active">
+      
+      <!-- Time Slot Filter Bar -->
+      <div class="slot-bar">
+        <div class="slot-bar-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span>Select Time Slot Filter:</span>
+        </div>
+
+        <div class="slot-pills">
+          <button class="slot-pill {% if current_slot == 'today' %}active{% endif %}" data-slot = "today" onclick="changeSlot('today')">Today</button>
+          <button class="slot-pill {% if current_slot == 'weekly' %}active{% endif %}" data-slot = "weekly" onclick="changeSlot('weekly')">Weekly (7 Days)</button>
+          <button class="slot-pill {% if current_slot == 'monthly' %}active{% endif %}" data-slot = "monthly" onclick="changeSlot('monthly')">Monthly (30 Days)</button>
+          <button class="slot-pill {% if current_slot == 'yearly' %}active{% endif %}" data-slot = "yearly" onclick="changeSlot('yearly')">Yearly (2026)</button>
+          <button class="slot-pill {% if current_slot == 'inception' %}active{% endif %}" data-slot = "inception" onclick="changeSlot('inception')">Since Inception (All)</button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-label">Sales Revenue</span>
+            <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+          </div>
+          <div class="kpi-value" id="kpi-sales-val">PKR {{ total_sales_val|floatformat:2 }}</div>
+          <div class="kpi-sub" id="kpi-sales-sub">{{ sales_count }} sale invoices processed in slot</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-label">Restock Purchases</span>
+            <div class="kpi-icon" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            </div>
+          </div>
+          <div class="kpi-value" id="kpi-purchases-val">PKR {{ total_purchases_val|floatformat:2 }}</div>
+          <div class="kpi-sub" id="kpi-purchases-sub">{{ purchases_count }} restock orders placed in slot</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-label">Active Time Slot</span>
+            <div class="kpi-icon" style="background: rgba(139, 92, 246, 0.2); color: #c084fc;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+          </div>
+          <div class="kpi-value" id="kpi-slot-name" style="text-transform: capitalize; font-size: 20px;">{{ current_slot }}</div>
+          <div class="kpi-sub">Filter synchronized across lists</div>
+        </div>
+      </div>
+
+      <!-- Dual History Tables: Sales & Purchases -->
+      <div class="history-grid">
+        
+        <!-- Left: Sales Invoices Table -->
+        <div class="table-card">
+          <div class="table-header">
+            <h2>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <span>Recorded Sales (Customer Invoices)</span>
+            </h2>
+            <span class="table-badge" id="badge-sales-count">{{ sales_count }} Sales</span>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Invoice #</th>
+                  <th>Customer</th>
+                  <th>Items</th>
+                  <th>Total (PKR)</th>
+                  <th>Status</th>
+                  <th>Date & Time</th>
+                </tr>
+              </thead>
+              <tbody id="sales-table-body">
+                {% for sale in sales %}
+                <tr>
+                  <td style="font-weight: 700; color: #a5b4fc;">{{ sale.invoice_number }}</td>
+                  <td>{{ sale.client.client_name }}</td>
+                  <td style="font-size: 12px; color: #cbd5e1;">
+                    {% with item=sale.items.first %}
+                      {% if item %}{{ item.quantity }}x {{ item.item.name }}{% else %}Hardware Sale{% endif %}
+                    {% endwith %}
+                  </td>
+                  <td style="font-weight: 700;">PKR {{ sale.total_amount|floatformat:2 }}</td>
+                  <td>
+                    <span class="status-badge {% if sale.payment_status == 'PAID' %}badge-paid{% else %}badge-unpaid{% endif %}">
+                      {{ sale.get_payment_status_display }}
+                    </span>
+                  </td>
+                  <td style="font-size: 11.5px; color: var(--text-muted);">{{ sale.created_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="6" class="empty-state">No sales recorded in this time slot.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right: Purchase Orders Table -->
+        <div class="table-card">
+          <div class="table-header">
+            <h2>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+              <span>Restock Purchases (Vendor Orders)</span>
+            </h2>
+            <span class="table-badge" id="badge-purchases-count">{{ purchases_count }} Orders</span>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>PO #</th>
+                  <th>Hardware Item</th>
+                  <th>Vendor</th>
+                  <th>Qty</th>
+                  <th>Cost (PKR)</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="purchases-table-body">
+                {% for po in purchases %}
+                <tr>
+                  <td style="font-weight: 700; color: #60a5fa;">#{{ po.id }}</td>
+                  <td>
+                    <div style="font-weight: 600;">{{ po.item.name }}</div>
+                    <div style="font-size: 11px; color: #94a3b8;">{{ po.item.item_code }}</div>
+                  </td>
+                  <td>{{ po.vendor.client_name }}</td>
+                  <td style="font-weight: 600;">{{ po.quantity }} {{ po.item.unit }}</td>
+                  <td style="font-weight: 700;">PKR {% widthratio po.quantity 1 po.unit_cost_price %}</td>
+                  <td>
+                    <span class="status-badge {% if po.status == 'RECEIVED' %}badge-received{% else %}badge-ordered{% endif %}">
+                      {{ po.status }}
+                    </span>
+                  </td>
+                  <td style="font-size: 11.5px; color: var(--text-muted);">{{ po.created_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="empty-state">No restock purchases placed in this time slot.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 2: MAKE RESTOCK ORDER -->
+    <!-- ======================================================== -->
+    <section id="tab-order" class="tab-section">
+      <div class="form-panel">
+        <h2 class="form-panel-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          <span>Place Restock Purchase Order</span>
+        </h2>
+        <p class="form-panel-desc">Submit restocking purchase orders to replenish wholesale hardware items from vendors.</p>
+
+        <!-- Rule Alert Box -->
+        <div class="rule-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" style="flex-shrink: 0; margin-top: 1px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <div>
+            <strong>Business Authority Rules for Cashier:</strong>
+            <ul style="margin-top: 4px; margin-left: 18px;">
+              <li>Cashiers can re-order items that have been ordered before from existing approved suppliers.</li>
+              <li>Ordering brand new items or pairing an existing item with a new supplier for the first time requires Owner authorization.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="order-alert" class="form-response-alert"></div>
+
+        <form id="form-cashier-order" onsubmit="submitCashierOrder(event)" mehtod = "POST">
+            {% csrf_token %}
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="order-item">Hardware Stock Item <span class="req">*</span></label>
+              <select id="order-item" class="form-select" required onchange="onOrderItemChanged()">
+                <option value="">-- Choose Stock Item --</option>
+                {% for item in stock_items %}
+                <option value="{{ item.id }}" data-price="{{ item.purchase_price }}" data-unit="{{ item.unit }}">
+                  {{ item.name }} ({{ item.item_code }})
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="order-vendor">Vendor / Supplier <span class="req">*</span></label>
+              <select id="order-vendor" class="form-select" required>
+                <option value="">-- Choose Vendor --</option>
+                {% for vendor in vendors %}
+                <option value="{{ vendor.id }}">
+                  {{ vendor.client_name }} ({{ vendor.get_client_city_display }})
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="order-qty">Quantity to Order <span class="req">*</span></label>
+              <input type="number" id="order-qty" class="form-control" min="1" value="10" name = "quantity_to_order" required>
+              <div class="form-help" id="order-unit-help">Units in base measure (PCS)</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="order-price">Unit Cost Price (PKR)</label>
+              <input type="number" step="0.01" id="order-price" class="form-control" placeholder="0.00" name = "price_of_order" required>
+              <div class="form-help">Auto-filled from default cost</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="order-note">Notes / Bilty Instructions</label>
+            <input type="text" id="order-note" class="form-control" placeholder="e.g. Urgent restock for warehouse rack B", name = "notes_of_order">
+          </div>
+
+          <button type="submit" class="btn-action-submit" id="btn-submit-order">
+            <span>Submit Purchase Order</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 3: RECORD CUSTOMER SALE (POS) -->
+    <!-- ======================================================== -->
+    <section id="tab-sale" class="tab-section">
+      <div class="form-panel">
+        <h2 class="form-panel-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+          <span>Record Customer Sale Invoice</span>
+        </h2>
+        <p class="form-panel-desc">Create wholesale or walk-in sales. Stock inventory is automatically deducted in real time.</p>
+
+        <div id="sale-alert" class="form-response-alert"></div>
+
+        <form id="form-cashier-sale" onsubmit="submitCashierSale(event)" method = "POST">
+            {% csrf_token %}
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="sale-client">Client / Customer <span class="req">*</span></label>
+              <select id="sale-client" class="form-select" required>
+                {% for client in clients %}
+                <option value="{{ client.id }}" {% if 'Walk-in' in client.client_name %}selected{% endif %}>
+                  {{ client.client_name }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="sale-item">Select Hardware Item <span class="req">*</span></label>
+              <select id="sale-item" class="form-select" required onchange="onSaleItemChanged()">
+                <option value="">-- Choose Item to Sell --</option>
+                {% for item in stock_items %}
+                <option value="{{ item.id }}" data-price="{{ item.selling_price }}" data-stock="{{ item.current_quantity }}" data-unit="{{ item.unit }}">
+                  {{ item.name }} (Stock: {{ item.current_quantity|default:0 }} {{ item.unit }})
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="sale-qty">Quantity <span class="req">*</span></label>
+              <input type="number" id="sale-qty" class="form-control" min="1" value="1" required oninput="calculateSaleTotal()" name = "sale_item_quantity">
+              <div class="form-help" id="sale-stock-avail">Available stock: -</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="sale-price">Unit Selling Price (PKR) <span class="req">*</span></label>
+              <input type="number" step="0.01" id="sale-price" class="form-control" required oninput="calculateSaleTotal()" name = "per_unit_price">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="sale-payment-method">Payment Method</label>
+              <select id="sale-payment-method" class="form-select">
+                <option value="CASH">Cash Counter</option>
+                <option value="BANK">Bank Transfer</option>
+                <option value="CHEQUE">Cheque</option>
+                <option value="CREDIT">Customer Ledger / Credit (Udhar)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="sale-payment-status">Payment Status</label>
+              <select id="sale-payment-status" class="form-select">
+                <option value="PAID">Fully Paid</option>
+                <option value="UNPAID">Unpaid / Added to Debt</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 14px; color: var(--text-muted); font-weight: 600;">Total Sale Amount:</span>
+            <span style="font-size: 22px; font-weight: 800; color: #34d399;" id="sale-total-display">PKR 0.00</span>
+          </div>
+
+          <button type="submit" class="btn-action-submit" id="btn-submit-sale" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <span>Confirm Sale & Issue Invoice</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 4: CHECK INVENTORY -->
+    <!-- ======================================================== -->
+    <section id="tab-inventory" class="tab-section">
+      <div class="table-card">
+        <div class="table-header">
+          <div>
+            <h2>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+              <span>Current Hardware Inventory Stock</span>
+            </h2>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Live stock on hand (base units). (Warehouse bin transfers managed by Warehouse Manager).</p>
+          </div>
+
+          <input type="text" id="inventory-search" class="search-input" placeholder="Search by name, SKU code..." oninput="filterInventoryTable()">
+        </div>
+
+        <div class="table-wrapper">
+          <table id="inventory-table">
+            <thead>
+              <tr>
+                <th>Item Code / SKU</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>In Stock Qty</th>
+                <th>Selling Price (PKR)</th>
+                <th>Inventory Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in stock_items %}
+              <tr class="inv-row">
+                <td style="font-weight: 700; color: #a5b4fc;">{{ item.item_code }}</td>
+                <td class="inv-name" style="font-weight: 600;">{{ item.name }}</td>
+                <td>{{ item.category }}</td>
+                <td style="font-weight: 700;">{{ item.current_quantity|default:0 }} {{ item.unit }}</td>
+                <td style="font-weight: 700;">PKR {{ item.selling_price|floatformat:2 }}</td>
+                <td>
+                  <span class="status-badge {% if item.inventory_status == 'In Stock' %}badge-paid{% elif item.inventory_status == 'Low Stock' %}badge-ordered{% else %}badge-unpaid{% endif %}">
+                    {{ item.inventory_status }}
+                  </span>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="6" class="empty-state">No stock items found.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Frontend JavaScript Logic -->
+  <script>
+    const APPROVED_PAIRS = {{ approved_pairs_json|safe }};
+    let currentSlot = '{{ current_slot }}';
+
+    // Main Tab Switching
+    function switchMainTab(tabId, btn) {
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+      
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+      if (btn) btn.classList.add('active');
+    }
+
+    // Time Slot Filter Switching via AJAX
+    function changeSlot(slot) {
+      currentSlot = slot;
+    document.querySelectorAll('.slot-pill').forEach(p => {
+      p.classList.toggle('active', p.dataset.slot === slot);
+    });
+      document.getElementById('kpi-slot-name').textContent = slot;
+
+      fetch(`/cashier/api/history/?slot=${slot}`)
+        .then(r => r.json())
+        .then(data => {
+          if (!data.success) return;
+          
+          // Update KPIs
+          document.getElementById('kpi-sales-val').textContent = `PKR ${data.total_sales_val.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+          document.getElementById('kpi-sales-sub').textContent = `${data.sales_count} sale invoices processed in slot`;
+          
+          document.getElementById('kpi-purchases-val').textContent = `PKR ${data.total_purchases_val.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+          document.getElementById('kpi-purchases-sub').textContent = `${data.purchases_count} restock orders placed in slot`;
+
+          document.getElementById('badge-sales-count').textContent = `${data.sales_count} Sales`;
+          document.getElementById('badge-purchases-count').textContent = `${data.purchases_count} Orders`;
+
+          // Re-render Sales Table
+          const salesBody = document.getElementById('sales-table-body');
+          if (data.sales.length === 0) {
+            salesBody.innerHTML = '<tr><td colspan="6" class="empty-state">No sales recorded in this time slot.</td></tr>';
+          } else {
+            salesBody.innerHTML = data.sales.map(s => `
+              <tr>
+                <td style="font-weight: 700; color: #a5b4fc;">${s.invoice_number}</td>
+                <td>${s.client_name}</td>
+                <td style="font-size: 12px; color: #cbd5e1;">${s.items_summary}</td>
+                <td style="font-weight: 700;">PKR ${s.total_amount.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                <td>
+                  <span class="status-badge ${s.status_code === 'PAID' ? 'badge-paid' : 'badge-unpaid'}">
+                    ${s.payment_status}
+                  </span>
+                </td>
+                <td style="font-size: 11.5px; color: var(--text-muted);">${s.created_at}</td>
+              </tr>
+            `).join('');
+          }
+
+          // Re-render Purchases Table
+          const purchasesBody = document.getElementById('purchases-table-body');
+          if (data.purchases.length === 0) {
+            purchasesBody.innerHTML = '<tr><td colspan="7" class="empty-state">No restock purchases placed in this time slot.</td></tr>';
+          } else {
+            purchasesBody.innerHTML = data.purchases.map(p => `
+              <tr>
+                <td style="font-weight: 700; color: #60a5fa;">#${p.id}</td>
+                <td>
+                  <div style="font-weight: 600;">${p.item_name}</div>
+                  <div style="font-size: 11px; color: #94a3b8;">${p.item_code}</div>
+                </td>
+                <td>${p.vendor_name}</td>
+                <td style="font-weight: 600;">${p.quantity} ${p.unit}</td>
+                <td style="font-weight: 700;">PKR ${p.total_cost.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                <td>
+                  <span class="status-badge ${p.status === 'RECEIVED' ? 'badge-received' : 'badge-ordered'}">
+                    ${p.status}
+                  </span>
+                </td>
+                <td style="font-size: 11.5px; color: var(--text-muted);">${p.created_at}</td>
+              </tr>
+            `).join('');
+          }
+        });
+    }
+
+    // Auto-fill price in Make Order form
+    function onOrderItemChanged() {
+      const select = document.getElementById('order-item');
+      const selected = select.options[select.selectedIndex];
+      if (selected && selected.value) {
+        document.getElementById('order-price').value = selected.getAttribute('data-price') || '0.00';
+        document.getElementById('order-unit-help').textContent = `Units in base measure (${selected.getAttribute('data-unit') || 'PCS'})`;
+      }
+    }
+
+    // Auto-fill price in Record Sale form
+    function onSaleItemChanged() {
+      const select = document.getElementById('sale-item');
+      const selected = select.options[select.selectedIndex];
+      if (selected && selected.value) {
+        const price = selected.getAttribute('data-price') || '0.00';
+        const stock = selected.getAttribute('data-stock') || '0';
+        const unit = selected.getAttribute('data-unit') || 'PCS';
+        document.getElementById('sale-price').value = price;
+        document.getElementById('sale-stock-avail').textContent = `Available stock: ${stock} ${unit}`;
+        calculateSaleTotal();
+      }
+    }
+
+    function calculateSaleTotal() {
+      const qty = parseFloat(document.getElementById('sale-qty').value) || 0;
+      const price = parseFloat(document.getElementById('sale-price').value) || 0;
+      const total = qty * price;
+      document.getElementById('sale-total-display').textContent = `PKR ${total.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+    }
+
+    // Submit Cashier Order with rule validation handling
+    function submitCashierOrder(event) {
+      event.preventDefault();
+      const alertBox = document.getElementById('order-alert');
+      alertBox.style.display = 'none';
+
+      const payload = {
+        item_id: document.getElementById('order-item').value,
+        vendor_id: document.getElementById('order-vendor').value,
+        quantity: document.getElementById('order-qty').value,
+        unit_cost_price: document.getElementById('order-price').value,
+        note: document.getElementById('order-note').value,
+      };
+
+      const btn = document.getElementById('btn-submit-order');
+      btn.disabled = true;
+      btn.textContent = 'Validating Authority...';
+
+      fetch('/cashier/api/order/', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+        body: JSON.stringify(payload),
+      })
+      .then(r => r.json().then(data => ({ status: r.status, data })))
+      .then(res => {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Submit Purchase Order</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+
+        if (res.data.success) {
+          alertBox.className = 'form-response-alert alert-success';
+          alertBox.innerHTML = `<strong>Success!</strong> ${res.data.message}`;
+          alertBox.style.display = 'flex';
+          document.getElementById('form-cashier-order').reset();
+          // Refresh time slot history
+          changeSlot(currentSlot);
+        } else {
+          alertBox.className = 'form-response-alert alert-danger';
+          alertBox.innerHTML = `<strong>Rule Restriction:</strong> ${res.data.error}`;
+          alertBox.style.display = 'flex';
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        btn.disabled = false;
+        btn.textContent = 'Submit Purchase Order';
+        alertBox.className = 'form-response-alert alert-danger';
+        alertBox.textContent = `Network error: ${err.message}`;
+        alertBox.style.display = 'flex';
+      });
+    }
+
+    // Submit Record Sale
+    function submitCashierSale(event) {
+      event.preventDefault();
+      const alertBox = document.getElementById('sale-alert');
+      alertBox.style.display = 'none';
+
+      const payload = {
+        client_id: document.getElementById('sale-client').value,
+        item_id: document.getElementById('sale-item').value,
+        quantity: document.getElementById('sale-qty').value,
+        unit_price: document.getElementById('sale-price').value,
+        payment_method: document.getElementById('sale-payment-method').value,
+        payment_status: document.getElementById('sale-payment-status').value,
+      };
+
+      const btn = document.getElementById('btn-submit-sale');
+      btn.disabled = true;
+      btn.textContent = 'Processing Sale...';
+
+      fetch('/cashier/api/sale/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+        body: JSON.stringify(payload),
+      })
+      .then(r => r.json().then(data => ({ status: r.status, data })))
+      .then(res => {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Confirm Sale & Issue Invoice</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+
+        if (res.data.success) {
+          alertBox.className = 'form-response-alert alert-success';
+          alertBox.innerHTML = `<strong>Sale Completed!</strong> ${res.data.message}`;
+          alertBox.style.display = 'flex';
+          document.getElementById('form-cashier-sale').reset();
+          document.getElementById('sale-total-display').textContent = 'PKR 0.00';
+          // Refresh time slot history
+          changeSlot(currentSlot);
+        } else {
+          alertBox.className = 'form-response-alert alert-danger';
+          alertBox.innerHTML = `<strong>Sale Failed:</strong> ${res.data.error}`;
+          alertBox.style.display = 'flex';
+        }
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.textContent = 'Confirm Sale & Issue Invoice';
+        alertBox.className = 'form-response-alert alert-danger';
+        alertBox.textContent = `Network error: ${err.message}`;
+        alertBox.style.display = 'flex';
+      });
+    }
+
+    // Filter Inventory Table
+    function filterInventoryTable() {
+      const q = document.getElementById('inventory-search').value.toLowerCase();
+      document.querySelectorAll('.inv-row').forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

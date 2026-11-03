@@ -1,0 +1,390 @@
+/* ==========================================================================
+   LAYOUT STRUCTURE
+   ========================================================================== */
+
+#app-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   LEFT SIDEBAR (MATCHING SCREENSHOT)
+   ========================================================================== */
+
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--sidebar-bg);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  padding: 24px 16px 20px 16px;
+  position: relative;
+  z-index: 50;
+  border-right: 1px solid var(--sidebar-border);
+}
+
+/* User Profile Badge at Top of Sidebar */
+.user-profile-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 8px;
+  margin-bottom: 28px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+}
+
+.user-avatar-circle {
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4);
+}
+
+.user-avatar-circle svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.user-name {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.user-email {
+  font-size: 12px;
+  color: #8896ab;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 155px;
+  margin-top: 2px;
+}
+
+/* Navigation Menu */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 16px;
+  border-radius: 8px;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 14.5px;
+  font-weight: 500;
+  transition: var(--transition);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: currentColor;
+  transition: var(--transition);
+}
+
+.nav-item:hover {
+  background-color: var(--sidebar-item-hover);
+  color: var(--sidebar-text-hover);
+}
+
+/* ACTIVE NAV ITEM (Dashboard as shown in screenshot) */
+.nav-item.active {
+  background-color: var(--primary);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+
+.nav-item.active svg {
+  fill: #ffffff;
+}
+
+.nav-badge {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+/* ==========================================================================
+   LEDGER HOVER FLYOUT MINI-SCREEN
+   ========================================================================== */
+
+.ledger-hover-group {
+  position: relative;
+  width: 100%;
+}
+
+.ledger-hover-group .flyout-arrow {
+  margin-left: auto;
+  width: 14px;
+  height: 14px;
+  transition: var(--transition);
+  color: var(--sidebar-text);
+  fill: none !important;
+}
+
+.ledger-hover-group:hover .flyout-arrow {
+  color: #ffffff;
+  transform: translateX(3px);
+}
+
+/* Floating Mini Screen Pop-up beside Ledger */
+.ledger-mini-screen {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: -8px;
+  width: 255px;
+  background-color: #171f30;
+  border: 1px solid #2a364f;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-10px) scale(0.96);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1000;
+}
+
+/* Invisible bridge so mouse hover doesn't drop between sidebar and popup */
+.ledger-mini-screen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -18px;
+  width: 22px;
+  height: 100%;
+}
+
+/* Hover trigger */
+.ledger-hover-group:hover .ledger-mini-screen,
+.ledger-mini-screen:hover {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(0) scale(1);
+}
+
+.mini-screen-header {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  padding: 4px 8px 6px 8px;
+  border-bottom: 1px solid #243046;
+}
+
+/* Option Buttons in Mini Screen */
+.mini-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background-color: #1c263c;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+  width: 100%;
+  color: #ffffff;
+}
+
+.mini-option-btn:hover {
+  background-color: #24314c;
+  transform: translateX(2px);
+}
+
+.mini-option-btn.option-credit:hover {
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.18);
+}
+
+.mini-option-btn.option-debt:hover {
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.18);
+}
+
+.mini-icon-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mini-icon-circle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.mini-icon-circle.credit {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.mini-icon-circle.debt {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.mini-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.mini-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.mini-desc {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.mini-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 9999px;
+}
+
+.mini-badge.credit-badge {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.mini-badge.debt-badge {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+/* Main Page Heading Mode Switcher */
+.ledger-header-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ledger-mode-switcher {
+  display: inline-flex;
+  background-color: #e2e8f0;
+  padding: 3px;
+  border-radius: 8px;
+  gap: 3px;
+  margin-top: 8px;
+  width: fit-content;
+}
+
+.mode-pill {
+  padding: 5px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.mode-pill:hover {
+  color: var(--text-main);
+}
+
+.mode-pill.active {
+  background-color: #ffffff;
+  color: var(--text-main);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.mode-pill.active.pill-credit {
+  color: #059669;
+}
+
+.mode-pill.active.pill-debt {
+  color: #dc2626;
+}
+
+/* Sidebar Footer / Logout */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--sidebar-border);
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: var(--sidebar-text);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: var(--transition);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+}
+
+.logout-btn svg {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+}
+
+.logout-btn:hover {
+  color: #f87171;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+

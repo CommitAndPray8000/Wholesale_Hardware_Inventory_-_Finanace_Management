@@ -1,0 +1,39 @@
+  <div class="modal-backdrop" id="modal-settle-ledger">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="settle-modal-title">Record Ledger Payment</h3>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+      <form id="form-settle-ledger">
+        <input type="hidden" id="settle-entry-id">
+        <div class="modal-body">
+          <div style="margin-bottom: 14px;">
+            <div style="font-size: 14px; font-weight: 600;" id="settle-party-name">Party Name</div>
+            <div style="font-size: 12.5px; color: #64748b; margin-top: 2px;">
+              Current outstanding balance: <strong id="settle-current-balance" style="color: #4f46e5;">$0.00</strong>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Payment / Remittance Amount ($) *</label>
+            <input type="number" id="settle-amount" class="form-control" step="0.01" placeholder="e.g. 1500.00" required>
+          </div>
+          <div class="form-group">
+            <label>Payment Method</label>
+            <select id="settle-method" class="form-control">
+              <option value="Bank Wire / ACH">Bank Wire / ACH</option>
+              <option value="Company Cheque">Company Cheque</option>
+              <option value="Credit / Debit Card">Credit / Debit Card</option>
+              <option value="Cash Deposit">Cash Deposit</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-trigger">Cancel</button>
+          <button type="submit" class="btn btn-primary">Confirm Payment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: HELP & SHORTCUTS

@@ -1,0 +1,9 @@
+/* ==========================================================================
+   WHOLESALE HARDWARE INVENTORY & MANAGEMENT SYSTEM - MODULAR STYLESHEET
+   ========================================================================== */
+
+@import url('variables.css');
+@import url('sidebar.css');
+@import url('topbar.css');
+@import url('views.css');
+@import url('modals.css');

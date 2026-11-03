@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Wholesale Hardware | Central Inventory & Operations</title>
+  <meta name="description" content="Wholesale hardware supply inventory, price management, contractor catalog, stock alerts, and business intelligence portal.">
+  <link rel="stylesheet" href="{% static 'wholesale_hardware/css/main.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'wholesale_hardware/assets/STK_logo-removebg-preview.png' %}">
+</head>
+<body>
+  <div id="app-container">
+    
+    <!-- LEFT SIDEBAR -->
+    {% include 'wholesale_hardware/components/sidebar.html' %}
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- TOPBAR & DROPDOWNS -->
+      {% include 'wholesale_hardware/components/topbar.html' %}
+
+      <!-- DYNAMIC CONTENT VIEWPORT -->
+      <main class="content-viewport">
+        {% include 'wholesale_hardware/views/view_dashboard.html' %}
+        {% include 'wholesale_hardware/views/view_stock.html' %}
+        {% include 'wholesale_hardware/views/view_prices.html' %}
+        {% include 'wholesale_hardware/views/view_ledger.html' %}
+        {% include 'wholesale_hardware/views/view_credit.html' %}
+        {% include 'wholesale_hardware/views/view_debt.html' %}
+        {% include 'wholesale_hardware/views/view_reports.html' %}
+        {% include 'wholesale_hardware/views/view_settings.html' %}
+        {% include 'wholesale_hardware/views/view_logout.html' %}
+        {% include 'wholesale_hardware/views/view_profile.html' %}
+      </main>
+
+    </div> <!-- /.main-wrapper -->
+  </div> <!-- /#app-container -->
+
+  <!-- MODALS -->
+  {% include 'wholesale_hardware/modals/modal_add_item.html' %}
+  {% include 'wholesale_hardware/modals/modal_adjust_stock.html' %}
+  {% include 'wholesale_hardware/modals/modal_bulk_price.html' %}
+  {% include 'wholesale_hardware/modals/modal_add_ledger.html' %}
+  {% include 'wholesale_hardware/modals/modal_settle_ledger.html' %}
+  {% include 'wholesale_hardware/modals/modal_help.html' %}
+  {% include 'wholesale_hardware/modals/modal_logout.html' %}
+  {% include 'wholesale_hardware/modals/modal_add_stock_popup.html' %}
+  {% include 'wholesale_hardware/modals/modal_stock_item_stats.html' %}
+
+  <!-- TOAST CONTAINER -->
+  {% include 'wholesale_hardware/components/toast.html' %}
+
+  <!-- MODULAR JAVASCRIPT SYSTEM -->
+  <script src="{% static 'wholesale_hardware/js/state.js' %}"></script>
+  <script src="{% static 'wholesale_hardware/js/navigation.js' %}"></script>
+  <script src="{% static 'wholesale_hardware/js/modals.js' %}"></script>
+  <script src="{% static 'wholesale_hardware/js/views.js' %}"></script>
+  <script src="{% static 'wholesale_hardware/js/ledger.js' %}"></script>
+  <script src="{% static 'wholesale_hardware/js/stock.js' %}"></script>
+  <script src="{% static 'wholesale_hardware/js/main.js' %}"></script>
+</body>
+</html>

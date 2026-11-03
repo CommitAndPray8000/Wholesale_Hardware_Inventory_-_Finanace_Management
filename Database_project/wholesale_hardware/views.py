@@ -1,116 +1,122 @@
 import json
 import time
 from datetime import datetime
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import StockItem, Order
+from django.contrib.auth import authenticate, login, logout
+from .models import StockItem, Order, ClientsAndVendors, Owner, CashierAccountant
+from .utils import seed_demo_data_if_needed
 
-def seed_initial_stock_items():
-    """Populates default items in the database if empty, with PKR pricing."""
-    if StockItem.objects.exists():
-        return
 
-    defaults = [
-        {
-            "name": "Heavy Duty Steel Rack",
-            "item_code": "SKU-9941",
-            "category": "Storage & Shelving",
-            "supplier": "Apex Logistics",
-            "current_quantity": 24,
-            "low_stock_threshold": 15,
-            "ordered_quantity": 0,
-            "delivered_quantity": 24,
-            "purchase_price": 38500.00,
-            "selling_price": 45000.00,
-        },
-        {
-            "name": "Industrial Pallet Box",
-            "item_code": "SKU-8822",
-            "category": "Material Handling",
-            "supplier": "Global Pack Co.",
-            "current_quantity": 12,
-            "low_stock_threshold": 15,
-            "ordered_quantity": 0,
-            "delivered_quantity": 12,
-            "purchase_price": 9800.00,
-            "selling_price": 12500.00,
-        },
-        {
-            "name": "Barcode Scanner Pro",
-            "item_code": "SKU-4402",
-            "category": "Warehouse Tech",
-            "supplier": "TechTrack Solutions",
-            "current_quantity": 0,
-            "low_stock_threshold": 10,
-            "ordered_quantity": 15,
-            "delivered_quantity": 0,
-            "purchase_price": 48000.00,
-            "selling_price": 58000.00,
-        },
-        {
-            "name": "Thermal Label Roll",
-            "item_code": "SKU-3120",
-            "category": "Packaging & Labels",
-            "supplier": "Zebra Supplies",
-            "current_quantity": 140,
-            "low_stock_threshold": 30,
-            "ordered_quantity": 0,
-            "delivered_quantity": 140,
-            "purchase_price": 3600.00,
-            "selling_price": 4800.00,
-        },
-        {
-            "name": "Heavy Duty Air Compressor",
-            "item_code": "SKU-5520",
-            "category": "Power Tools",
-            "supplier": "Bostitch Tools",
-            "current_quantity": 0,
-            "low_stock_threshold": 5,
-            "ordered_quantity": 0,
-            "delivered_quantity": 5,
-            "purchase_price": 72000.00,
-            "selling_price": 89000.00,
-        },
-    ]
+def welcome(request):
+    """Renders the standalone welcome landing page for Standard Traders."""
+    return render(request, "welcome.html")
 
-    for item_data in defaults:
-        StockItem.objects.create(**item_data)
 
-def index(request):
-    """Renders the wholesale hardware central operations portal with live DB stock data."""
-    seed_initial_stock_items()
-    items = StockItem.objects.all()
-    items_json = [i.to_dict() for i in items]
-    return render(request, 'index.html', {
-        'db_stock_items': items,
-        'db_stock_items_json': json.dumps(items_json),
+def login_portal(request):
+    """
+    Renders the dedicated Admin & Cashier login portal.
+    Authenticates user and redirects according to role:
+    - Owner -> Full Dashboard (/dashboard/)
+    - Cashier -> Cashier Operations Portal (/cashier/portal/)
+    """
+    seed_demo_data_if_needed()
+
+    # If already logged in, route immediately
+    if request.user.is_authenticated:
+        if request.user.is_superuser or hasattr(request.user, "owner_profile"):
+            return redirect("/dashboard/")
+        elif hasattr(request.user, "cashier_profile"):
+            return redirect("/cashier/portal/")
+        return redirect("/dashboard/")
+
+    error_message = None
+    info_message = None
+    if request.GET.get("info") == "logged_out":
+        info_message = "You have been securely signed out."
+    elif request.GET.get("info") == "login_required":
+        info_message = "Please sign in to access the system."
+
+    if request.method == "POST":
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "").strip()
+        next_url = request.POST.get("next") or request.GET.get("next")
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+
+            is_owner = user.is_superuser or hasattr(user, "owner_profile")
+            is_cashier = hasattr(user, "cashier_profile")
+
+            if is_owner:
+                target = next_url if (next_url and "/cashier/" not in next_url) else "/dashboard/"
+                return redirect(target)
+            elif is_cashier:
+                return redirect("/cashier/portal/")
+            else:
+                return redirect("/dashboard/")
+        else:
+            error_message = "Invalid username or password. Please check your credentials."
+
+    return render(request, "login.html", {
+        "error_message": error_message,
+        "info_message": info_message,
+        "next_url": request.GET.get("next", ""),
     })
+
+
+def logout_view(request):
+    """Signs out the current user session and redirects to login portal."""
+    logout(request)
+    return redirect("/login/?info=logged_out")
+
+
+def dashboard(request):
+    """
+    Renders the wholesale hardware central operations portal with live DB stock data.
+    Restricted to Owner only! Cashiers are redirected to the Cashier Portal.
+    """
+    if not request.user.is_authenticated:
+        return redirect("/login/?next=/dashboard/&info=login_required")
+
+    is_owner = request.user.is_superuser or hasattr(request.user, "owner_profile")
+    if not is_owner:
+        return redirect("/cashier/portal/?msg=owner_restricted")
+
+    seed_demo_data_if_needed()
+    items = StockItem.objects.prefetch_related("units").all()
+    items_json = [i.to_dict() for i in items]
+    return render(request, "wholesale_hardware/dashboard.html", {
+        "db_stock_items": items,
+        "db_stock_items_json": json.dumps(items_json),
+        "current_user": request.user,
+    })
+
 
 @csrf_exempt
 def api_stock_items(request):
-    """GET list of default stock items or simulate POST new stock item in-memory."""
-    seed_initial_stock_items()
-    if request.method == 'GET':
+    """GET list of stock items or simulate POST new stock item in-memory."""
+    if request.method == "GET":
         items = [i.to_dict() for i in StockItem.objects.all()]
         return JsonResponse({"success": True, "items": items})
 
-    elif request.method == 'POST':
+    elif request.method == "POST":
         try:
             data = json.loads(request.body) if request.body else request.POST
-            name = data.get('name', '').strip()
-            item_code = data.get('item_code') or data.get('sku', '').strip()
-            category = data.get('category', 'Hardware').strip()
-            supplier = data.get('supplier', 'Apex Logistics').strip()
-            current_quantity = int(data.get('current_quantity') or data.get('inStock', 0) or 0)
-            low_stock_threshold = int(data.get('low_stock_threshold', 15))
-            purchase_price = float(data.get('purchase_price') or data.get('price', 0.0))
-            selling_price = float(data.get('selling_price') or (purchase_price * 1.25))
+            name = data.get("name", "").strip()
+            item_code = data.get("item_code") or data.get("sku", "").strip()
+            category = data.get("category", "Hardware").strip()
+            supplier = data.get("supplier", "Apex Logistics").strip()
+            current_quantity = int(data.get("current_quantity") or data.get("inStock", 0) or 0)
+            low_stock_threshold = int(data.get("low_stock_threshold", 15))
+            purchase_price = float(data.get("purchase_price") or data.get("price", 0.0))
+            selling_price = float(data.get("selling_price") or (purchase_price * 1.25))
 
             if not name or not item_code:
                 return JsonResponse({"success": False, "error": "Item Name and Item Code/SKU are required"}, status=400)
 
-            # In-memory testing mode: return simulated item without saving to database
             mock_item = {
                 "id": int(time.time() * 1000),
                 "name": name,
@@ -138,21 +144,22 @@ def api_stock_items(request):
 
     return JsonResponse({"success": False, "error": "Method not allowed"}, status=405)
 
+
 @csrf_exempt
 def api_order_create(request):
     """
     POST: Place an order for an item in-memory testing mode without database write.
     """
-    if request.method != 'POST':
+    if request.method != "POST":
         return JsonResponse({"success": False, "error": "POST method required"}, status=405)
 
     try:
         data = json.loads(request.body) if request.body else request.POST
-        item_id = data.get('item_id')
-        item_code = data.get('item_code') or data.get('sku')
-        quantity = int(data.get('quantity', 0))
-        supplier = data.get('supplier', '').strip()
-        note = data.get('note', '').strip()
+        item_id = data.get("item_id")
+        item_code = data.get("item_code") or data.get("sku")
+        quantity = int(data.get("quantity", 0))
+        supplier = data.get("supplier", "").strip()
+        note = data.get("note", "").strip()
 
         if quantity <= 0:
             return JsonResponse({"success": False, "error": "Quantity must be greater than zero"}, status=400)
@@ -165,10 +172,9 @@ def api_order_create(request):
 
         item_name = item.name if item else (item_code or "Selected Item")
 
-        # In-memory testing mode: return simulated success without persisting changes
         return JsonResponse({
             "success": True,
-            "message": f"Successfully placed order for {quantity} units of '{item_name}'. (In-memory testing mode)",
+            "message": f"Successfully placed order for {quantity} units of '{item_name}'.",
             "order": {
                 "id": int(time.time() * 1000),
                 "item_id": item.id if item else 0,
@@ -182,7 +188,7 @@ def api_order_create(request):
             },
             "item": {
                 "item_code": item_code,
-                "ordered_quantity": ((item.ordered_quantity if item else 0) + quantity),
+                "ordered_quantity": ((item.ordered_quantity if item and hasattr(item, "ordered_quantity") else 0) + quantity),
             },
         })
 

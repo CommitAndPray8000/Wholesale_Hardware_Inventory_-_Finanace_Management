@@ -1,0 +1,38 @@
+  <div class="modal-backdrop" id="modal-adjust-stock">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Adjust Stock Level</h3>
+        <button class="modal-close-btn modal-close-trigger">&times;</button>
+      </div>
+      <form id="form-adjust-stock">
+        <input type="hidden" id="adjust-item-id">
+        <div class="modal-body">
+          <div style="margin-bottom: 14px;">
+            <div style="font-size: 14px; font-weight: 600;" id="adjust-item-name">Product Name</div>
+            <div style="font-size: 12.5px; color: #64748b; margin-top: 2px;">
+              Current inventory on hand: <strong id="adjust-current-stock" style="color: #4f46e5;">0 units</strong>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Adjustment Type</label>
+            <select id="adjust-type" class="form-control">
+              <option value="add">Add Inflow (+ Restock / Purchase Order)</option>
+              <option value="remove">Remove Outflow (- Sale / Damaged / Return)</option>
+              <option value="set">Manual Inventory Count (Set Exact Count)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Quantity Units</label>
+            <input type="number" id="adjust-qty" class="form-control" placeholder="e.g. 50" min="1" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-trigger">Cancel</button>
+          <button type="submit" class="btn btn-primary">Apply Stock Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: BULK PRICE ADJUSTMENT
